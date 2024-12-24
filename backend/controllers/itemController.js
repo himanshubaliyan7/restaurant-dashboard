@@ -1,4 +1,3 @@
-// backend/controllers/itemController.js
 const Item = require("../models/Item");
 const Category = require("../models/Category");
 
@@ -14,6 +13,7 @@ exports.createItem = async (req, res) => {
       serviceType,
     } = req.body;
 
+    // Ensure the category is valid
     const category = await Category.findById(categoryId);
     if (!category) {
       return res.status(400).json({ error: "Invalid categoryId" });
@@ -37,7 +37,7 @@ exports.createItem = async (req, res) => {
 
 exports.getAllItems = async (req, res) => {
   try {
-    // Populate to get category details
+    // Populate the category data
     const items = await Item.find().populate("categoryId");
     return res.status(200).json(items);
   } catch (error) {

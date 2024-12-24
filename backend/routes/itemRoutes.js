@@ -1,4 +1,3 @@
-// backend/routes/itemRoutes.js
 const express = require("express");
 const router = express.Router();
 const { createItem, getAllItems } = require("../controllers/itemController");

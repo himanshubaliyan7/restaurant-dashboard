@@ -1,12 +1,12 @@
 // frontend/src/components/CategoryList.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import CategoryModal from "./CategoryModal";
 
 function CategoryList() {
   const [categories, setCategories] = useState([]);
-  const [categoryName, setCategoryName] = useState("");
+  const [modalOpen, setModalOpen] = useState(false);
 
-  // Fetch categories on mount
   useEffect(() => {
     fetchCategories();
   }, []);
@@ -20,12 +20,11 @@ function CategoryList() {
     }
   };
 
-  const addCategory = async () => {
+  const handleSaveCategory = async (name) => {
     try {
       await axios.post("http://localhost:5000/api/categories", {
-        categoryName,
+        categoryName: name,
       });
-      setCategoryName("");
       fetchCategories();
     } catch (err) {
       console.error(err);
@@ -35,7 +34,6 @@ function CategoryList() {
   return (
     <div>
       <h1 className="text-xl font-bold mb-4">Categories</h1>
-
       <ul className="mb-4">
         {categories.map((cat) => (
           <li key={cat._id} className="py-1">
@@ -44,21 +42,18 @@ function CategoryList() {
         ))}
       </ul>
 
-      <div className="flex gap-2">
-        <input
-          type="text"
-          placeholder="Enter new category"
-          className="border px-2 py-1"
-          value={categoryName}
-          onChange={(e) => setCategoryName(e.target.value)}
-        />
-        <button
-          className="bg-blue-500 text-white px-4 py-1"
-          onClick={addCategory}
-        >
-          Add
-        </button>
-      </div>
+      <button
+        onClick={() => setModalOpen(true)}
+        className="bg-blue-500 text-white px-4 py-2"
+      >
+        Add Category
+      </button>
+
+      <CategoryModal
+        isOpen={modalOpen}
+        setIsOpen={setModalOpen}
+        onSave={handleSaveCategory}
+      />
     </div>
   );
 }

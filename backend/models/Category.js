@@ -1,4 +1,3 @@
-// backend/models/Category.js
 const mongoose = require("mongoose");
 
 const CategorySchema = new mongoose.Schema({
@@ -8,7 +7,7 @@ const CategorySchema = new mongoose.Schema({
   },
   parentId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Category", // if you want hierarchical categories
+    ref: "Category",
     default: null,
   },
 });

@@ -1,4 +1,3 @@
-// backend/models/Item.js
 const mongoose = require("mongoose");
 
 const ItemSchema = new mongoose.Schema({
@@ -15,14 +14,19 @@ const ItemSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
-  description: String,
-  imageUrl: String,
+  description: {
+    type: String,
+  },
+  imageUrl: {
+    type: String,
+    default: "",
+  },
   foodType: {
-    type: String, // 'Veg', 'Non Veg', 'Egg'
+    type: String,
     default: "Veg",
   },
   serviceType: {
-    type: String, // 'Delivery', 'Takeaway', or both
+    type: String,
     default: "Delivery,Takeaway",
   },
 });
