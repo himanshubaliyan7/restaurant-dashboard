@@ -9,7 +9,9 @@ import DeliveryMenu from "./pages/DeliveryMenu";
 import DineInMenu from "./pages/DineInMenu";
 import TaxesAndCharges from "./pages/TaxesAndCharges";
 import Offers from "./pages/Offers";
-import Settings from "./pages/Settings";
+import OutletSettings from "./pages/OutletSettings";
+import OutletInfo from "./pages/OutletInfo";
+import Help from "./pages/Help";
 
 export default function App() {
   return (
@@ -20,7 +22,9 @@ export default function App() {
         <Route path="/dine-in-menu" element={<DineInMenu />} />
         <Route path="/taxes-charges" element={<TaxesAndCharges />} />
         <Route path="/offers" element={<Offers />} />
-        <Route path="/settings" element={<Settings />} />
+        <Route path="/outlet-settings" element={<OutletSettings />} />
+        <Route path="/outlet-info" element={<OutletInfo />} />
+        <Route path="/help" element={<Help />} />
         {/* If you need more pages, add them here */}
       </Route>
     </Routes>

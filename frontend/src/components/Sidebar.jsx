@@ -1,144 +1,130 @@
-// ------------------------
-// src/components/Sidebar.jsx
-// ------------------------
-import React, { useState } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { NavLink } from "react-router-dom";
 import {
   HiOutlineHome,
   HiOutlineTruck,
-  HiOutlineShoppingBag,
   HiOutlineCurrencyDollar,
   HiOutlineGift,
   HiOutlineCog,
-  HiOutlineLogout,
+  HiOutlineInformationCircle,
+  HiOutlineQuestionMarkCircle,
 } from "react-icons/hi";
 import { MdOutlineDining } from "react-icons/md";
+import { OutletContext } from "../context/OutletContext";
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(true);
-  const navigate = useNavigate();
+  const { outletInfo } = useContext(OutletContext);
 
-  const handleLogout = () => {
-    // If you have auth logic, place it here
-    navigate("/");
-  };
+  // Main container: dark gray background, white text, smooth width transitions
+  const sidebarClasses = `
+    ${expanded ? "w-64" : "w-20"}
+    flex flex-col
+    border-r border-gray-800
+    bg-gray-900
+    text-white
+    transition-all duration-300 ease-in-out overflow-hidden
+  `;
 
-  return (
-    <div
-      className={`${
-        expanded ? "w-64" : "w-20"
-      } flex flex-col bg-white border-r border-gray-200 transition-all duration-300`}
-    >
-      <div className="flex items-center justify-between p-4 bg-blue-600">
-        <div className="flex items-center">
-          <span className="text-white font-bold text-xl">
-            {expanded ? "Restaurant" : "R"}
+  // Top bar behind the “zomato” text: red accent
+  const topBarClasses = `
+    w-full py-4 px-4
+    bg-red-600
+    flex flex-col items-start
+  `;
+
+  // “Restaurant dashboard” line fade/slide
+  const restaurantDashClasses = `
+    transition-all duration-300 ease-in-out overflow-hidden
+    ${expanded ? "max-h-10 mt-1 opacity-100" : "max-h-0 mt-0 opacity-0"}
+  `;
+
+  // Bottom outlet info: slide/fade in/out
+  const bottomInfoClasses = `
+    border-t border-gray-800 text-sm leading-tight
+    transition-all duration-300 ease-in-out overflow-hidden
+    ${expanded ? "max-h-32 p-4 opacity-100" : "max-h-0 p-0 opacity-0"}
+  `;
+
+  // Nav items helper: icons + label fade
+  function navItem(to, Icon, label) {
+    return (
+      <NavLink
+        to={to}
+        className={({ isActive }) =>
+          `
+            block rounded-md
+            ${isActive ? "bg-gray-700 font-semibold" : "font-medium"}
+            hover:bg-gray-700
+            text-gray-200
+            transition-colors duration-200
+          `
+        }
+      >
+        <div className="flex items-center gap-2 px-3 py-2">
+          <Icon size={20} className="flex-shrink-0" />
+          <span
+            className={`
+              whitespace-nowrap
+              transition-all duration-300 ease-in-out
+              ${expanded ? "opacity-100 w-auto" : "opacity-0 w-0"}
+              overflow-hidden
+            `}
+          >
+            {label}
           </span>
         </div>
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-white focus:outline-none"
-        >
-          {expanded ? "<" : ">"}
-        </button>
+      </NavLink>
+    );
+  }
+
+  return (
+    <div className={sidebarClasses}>
+      {/* Top bar with brand + toggle, using bg-red-600 */}
+      <div className={topBarClasses}>
+        <div className="flex items-center justify-between w-full">
+          <div className="font-bold text-2xl">{expanded ? "zomato" : "z"}</div>
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-white focus:outline-none ml-2"
+          >
+            {expanded ? "<" : ">"}
+          </button>
+        </div>
+        <div className={restaurantDashClasses}>
+          <div className="text-sm font-medium">Restaurant dashboard</div>
+        </div>
       </div>
 
-      <nav className="flex-1 overflow-y-auto">
-        <ul className="px-2 py-4 space-y-1">
+      {/* Navigation links (dark theme) */}
+      <nav className="flex-1 overflow-y-auto py-4">
+        <ul className="space-y-1">
+          <li>{navItem("/", HiOutlineHome, "Dashboard")}</li>
+          <li>{navItem("/delivery-menu", HiOutlineTruck, "Takeaway Menu")}</li>
+          <li>{navItem("/dine-in-menu", MdOutlineDining, "Dine-In Menu")}</li>
           <li>
-            <NavLink
-              to="/"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 font-semibold" : "font-medium"
-                }`
-              }
-            >
-              <HiOutlineHome size={20} />
-              {expanded && <span>Dashboard</span>}
-            </NavLink>
+            {navItem(
+              "/taxes-charges",
+              HiOutlineCurrencyDollar,
+              "Taxes & Charges"
+            )}
           </li>
-
+          <li>{navItem("/offers", HiOutlineGift, "Offers")}</li>
           <li>
-            <NavLink
-              to="/delivery-menu"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 font-semibold" : "font-medium"
-                }`
-              }
-            >
-              <HiOutlineTruck size={20} />
-              {expanded && <span>Delivery Menu</span>}
-            </NavLink>
+            {navItem("/outlet-settings", HiOutlineCog, "Outlet settings")}
           </li>
-
           <li>
-            <NavLink
-              to="/dine-in-menu"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 font-semibold" : "font-medium"
-                }`
-              }
-            >
-              <MdOutlineDining size={20} />
-              {expanded && <span>Dine-In Menu</span>}
-            </NavLink>
+            {navItem("/outlet-info", HiOutlineInformationCircle, "Outlet info")}
           </li>
-
-          <li>
-            <NavLink
-              to="/taxes-charges"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 font-semibold" : "font-medium"
-                }`
-              }
-            >
-              <HiOutlineCurrencyDollar size={20} />
-              {expanded && <span>Taxes & Charges</span>}
-            </NavLink>
-          </li>
-
-          <li>
-            <NavLink
-              to="/offers"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 font-semibold" : "font-medium"
-                }`
-              }
-            >
-              <HiOutlineGift size={20} />
-              {expanded && <span>Offers</span>}
-            </NavLink>
-          </li>
-
-          <li>
-            <NavLink
-              to="/settings"
-              className={({ isActive }) =>
-                `flex items-center gap-2 px-3 py-2 rounded-md hover:bg-gray-100 ${
-                  isActive ? "bg-gray-100 font-semibold" : "font-medium"
-                }`
-              }
-            >
-              <HiOutlineCog size={20} />
-              {expanded && <span>Settings</span>}
-            </NavLink>
-          </li>
+          <li>{navItem("/help", HiOutlineQuestionMarkCircle, "Help")}</li>
         </ul>
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
-        <button
-          onClick={handleLogout}
-          className="flex items-center w-full gap-2 px-3 py-2 hover:bg-gray-100 rounded-md"
-        >
-          <HiOutlineLogout size={20} />
-          {expanded && <span>Logout</span>}
-        </button>
+      {/* Bottom outlet info (slide/fade) */}
+      <div className={bottomInfoClasses}>
+        <div className="font-semibold">{outletInfo.name || "Loading..."}</div>
+        <div>{outletInfo.resId ? `RES ID : ${outletInfo.resId}` : ""}</div>
+        <div>{outletInfo.address}</div>
       </div>
     </div>
   );

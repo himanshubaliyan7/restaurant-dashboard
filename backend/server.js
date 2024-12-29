@@ -5,6 +5,7 @@ const path = require("path");
 const multer = require("multer");
 const connectDB = require("./config/db");
 const apiRoutes = require("./routes");
+const outletRoutes = require("./routes/outletRoutes");
 
 const app = express();
 
@@ -28,6 +29,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
+app.use("/api/outlet-info", outletRoutes);
 // Serve static files from "uploads" so they can be accessed by URL
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 

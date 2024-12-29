@@ -1,17 +1,34 @@
-// ------------------------
 // src/pages/DineInMenu.jsx
-// ------------------------
-import React from "react";
+import React, { useState } from "react";
+import LeftPanel from "../components/LeftPanel";
+import RightPanel from "../components/RightPanel";
+import TopBar from "../components/TopBar";
+import dummyData from "../data/dummy";
+
+const {dineInCategories } = dummyData;
 
 export default function DineInMenu() {
+  const [selectedProduct, setSelectedProduct] = useState(null);
+
+  const handleProductSelect = (product) => {
+    setSelectedProduct(product);
+  };
+
   return (
-    <div className="bg-white p-6 rounded shadow">
-      <h2 className="text-2xl font-bold mb-4">Dine-In Menu</h2>
-      <p className="text-gray-600">
-        Manage your Dine-In categories and items here (similar to Delivery
-        Menu).
-      </p>
-      {/* Replicate the same logic from DeliveryMenu if needed */}
+    <div className="flex flex-col h-screen">
+      <TopBar title="Dine-In Menu" />
+      <div className="flex flex-1 overflow-hidden">
+        <LeftPanel
+          categories={dineInCategories}
+          onProductSelect={handleProductSelect}
+        />
+        {selectedProduct && (
+          <RightPanel
+            selectedProduct={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+          />
+        )}
+      </div>
     </div>
   );
 }
