@@ -19,7 +19,7 @@ export default function DeliveryMenu() {
 
   return (
     <div className="flex flex-col h-screen">
-      <TopBar title="Delivery Menu" />
+      <TopBar title="Takeaway Menu" />
       <div className="flex flex-1 overflow-hidden">
         <LeftPanel
           categories={dummyData.deliveryCategories}

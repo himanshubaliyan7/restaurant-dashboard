@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import {
   HiOutlineHome,
@@ -10,11 +10,10 @@ import {
   HiOutlineQuestionMarkCircle,
 } from "react-icons/hi";
 import { MdOutlineDining } from "react-icons/md";
-import { OutletContext } from "../context/OutletContext";
+import { outletData } from "../data/dummy"; // Update the path as necessary  // Import dummy data
 
 export default function Sidebar() {
   const [expanded, setExpanded] = useState(true);
-  const { outletInfo } = useContext(OutletContext);
 
   // Main container: dark gray background, white text, smooth width transitions
   const sidebarClasses = `
@@ -122,9 +121,9 @@ export default function Sidebar() {
 
       {/* Bottom outlet info (slide/fade) */}
       <div className={bottomInfoClasses}>
-        <div className="font-semibold">{outletInfo.name || "Loading..."}</div>
-        <div>{outletInfo.resId ? `RES ID : ${outletInfo.resId}` : ""}</div>
-        <div>{outletInfo.address}</div>
+        <div className="font-semibold">{outletData.name || "Loading..."}</div>
+        <div>{outletData.resId ? `RES ID : ${outletData.resId}` : ""}</div>
+        <div>{outletData.address}</div>
       </div>
     </div>
   );
