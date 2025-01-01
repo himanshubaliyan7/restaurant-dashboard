@@ -198,7 +198,10 @@ export const offersData = [
 // src/data/dummy.js
 
 export const outletData = {
-    name: "My Outlet",
-    resId: "RES123",
-    address: "123 Main St, Anytown, AT 12345"
+  name: "My Outlet",
+  resId: "RES123",
+  address: "123 Main St, Anytown, AT 12345",
+  image: "https://via.placeholder.com/150",
+  contact: "123-456-7890",
+  openingHours: "Mon-Sat: 9am-9pm",
 };

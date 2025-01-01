@@ -1,5 +1,5 @@
-import React, { useState, useContext, useRef } from "react";
-import { OutletContext } from "../context/OutletContext";
+import React, { useState, useRef } from "react";
+import { outletData } from "../data/dummy"; // Update the path as necessary
 import {
   HiOutlineSearch,
   HiOutlineBell,
@@ -7,7 +7,6 @@ import {
 } from "react-icons/hi";
 
 export default function TopNav() {
-  const { outletInfo } = useContext(OutletContext);
   const [showProfileDropdown, setShowProfileDropdown] = useState(false);
   const [showNotificationsDropdown, setShowNotificationsDropdown] =
     useState(false);
@@ -70,18 +69,18 @@ export default function TopNav() {
             <div className="absolute right-0 w-64 p-3 mt-2 bg-white text-gray-800 border border-gray-200 shadow-lg rounded-lg">
               <div className="flex flex-col items-center space-x-3 mb-3">
                 <img
-                  src={outletInfo.image || "path/to/default-profile-image.jpg"} // Assume image URL in outletInfo
+                  src={outletData.image || "path/to/default-profile-image.jpg"} // Assume image URL in outletInfo
                   alt="Profile"
                   className="w-20 h-20 rounded-full mb-2"
                 />
                 <div>
-                  <p className="font-semibold">{outletInfo.name}</p>
+                  <p className="font-semibold">{outletData.name}</p>
                   <p className="text-sm">
-                    Contact Number: {outletInfo.contact}
+                    Contact Number: {outletData.contact}
                   </p>{" "}
                   {/* Assuming contact field */}
                   <p className="text-sm">
-                    Opening Hours: {outletInfo.openingHours}
+                    Opening Hours: {outletData.openingHours}
                   </p>{" "}
                   {/* Assuming openingHours field */}
                 </div>
