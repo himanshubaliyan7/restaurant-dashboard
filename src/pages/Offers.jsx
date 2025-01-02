@@ -1,22 +1,20 @@
 // src/pages/Offers.jsx
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 
-// Suppose your data is default-exported as 'dummy'
-import dummy from '../data/dummy';
-import { initialOffers } from '../data/offersData';
-import { filterCategoriesByOffers } from '../utils/filterMenu';
+import dummy from "../data/dummy";
+import { initialOffers } from "../data/offersData";
+import { filterCategoriesByOffers } from "../utils/filterMenu";
 
-// Sub-components
-import CreateOfferForm from '../components/Offers/CreateOfferForm';
-import OffersList from '../components/Offers/OffersList';
-import CategoryDisplay from '../components/Offers/CategoryDisplay';
+import CreateOfferForm from "../components/Offers/CreateOfferForm";
+import OffersList from "../components/Offers/OffersList";
+import CategoryDisplay from "../components/Offers/CategoryDisplay";
 
 function Offers() {
   const { deliveryCategories, dineInCategories } = dummy;
   const [offers, setOffers] = useState(initialOffers);
 
-  // Flatten items if needed for the multi-select
+  // Flatten items to build itemMap (for item-level offers)
   const allDeliveryItems = deliveryCategories.flatMap((cat) =>
     cat.subcategories.flatMap((sub) => sub.items)
   );
@@ -25,7 +23,13 @@ function Offers() {
   );
   const allItems = [...allDeliveryItems, ...allDineInItems];
 
-  // Collect unique categories and subcategories
+  // itemMap: { itemId -> itemName }
+  const itemMap = {};
+  allItems.forEach((itm) => {
+    itemMap[itm.id] = itm.name;
+  });
+
+  // Unique categories/subCategories for the form
   const uniqueCategories = [
     ...new Set([...deliveryCategories, ...dineInCategories].map((c) => c.name)),
   ];
@@ -38,25 +42,31 @@ function Offers() {
   ];
 
   // Handlers
-  const handleAddOffer = (offerObj) => {
-    setOffers((prev) => [...prev, offerObj]);
+  const handleAddOffer = (newOffer) => {
+    setOffers((prev) => [...prev, newOffer]);
   };
   const handleRemoveOffer = (offerId) => {
-    setOffers((prev) => prev.filter((o) => o.id !== offerId));
+    setOffers((prev) => prev.filter((off) => off.id !== offerId));
+  };
+  const handleEditOffer = (offerId, updatedFields) => {
+    setOffers((prev) =>
+      prev.map((off) =>
+        off.id === offerId ? { ...off, ...updatedFields } : off
+      )
+    );
   };
 
-  // Filtered data (only items with offers)
+  // Filter categories to show only items that have an offer
   const impactedDelivery = filterCategoriesByOffers(deliveryCategories, offers);
   const impactedDineIn = filterCategoriesByOffers(dineInCategories, offers);
 
   return (
     <motion.div
-      className="min-h-screen bg-gray-100" 
+      className="min-h-screen bg-gray-100"
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.4 }}
     >
-      {/* Container with some padding and max-width */}
       <div className="p-6 max-w-6xl mx-auto">
         <motion.h1
           className="text-3xl font-bold text-gray-800 mb-6"
@@ -67,8 +77,13 @@ function Offers() {
           Manage Offers
         </motion.h1>
 
-        <div className="flex flex-col md:flex-row gap-8">
-          <div className="flex-1">
+        {/**
+         * 'md:items-stretch' ensures on medium screens or larger,
+         * each column matches the tallest one's height.
+         */}
+        <div className="flex flex-col md:flex-row gap-8 md:items-stretch">
+          {/* Left Column: Create Offer Form */}
+          <div className="flex-1 bg-white shadow-sm rounded p-4">
             <CreateOfferForm
               onSave={handleAddOffer}
               categories={uniqueCategories}
@@ -77,19 +92,24 @@ function Offers() {
             />
           </div>
 
-          <div className="flex-1">
+          {/* Right Column: Offers List */}
+          <div className="flex-1 bg-white shadow-sm rounded p-4">
             <OffersList
               offers={offers}
               onRemoveOffer={handleRemoveOffer}
+              onEditOffer={handleEditOffer}
+              itemMap={itemMap}
             />
           </div>
         </div>
 
+        {/* Items with Offers (Delivery) */}
         <CategoryDisplay
           data={impactedDelivery}
           offers={offers}
           title="Items with Offers (Delivery)"
         />
+        {/* Items with Offers (Dine-In) */}
         <CategoryDisplay
           data={impactedDineIn}
           offers={offers}
