@@ -107,13 +107,13 @@ function Offers() {
         <CategoryDisplay
           data={impactedDelivery}
           offers={offers}
-          title="Items with Offers (Delivery)"
+          title="Delivery"
         />
         {/* Items with Offers (Dine-In) */}
         <CategoryDisplay
           data={impactedDineIn}
           offers={offers}
-          title="Items with Offers (Dine-In)"
+          title="Dine-In"
         />
       </div>
     </motion.div>
